@@ -146,54 +146,14 @@ namespace seh {
 	 * вынуждает компилятор заполнить структуру для перехвата исключения и указать catchIndex
 	 * возвращает catchIndex
 	 */
-	__attribute__((noinline, stdcall)) volatile int __throw_magic_link() {
-		NOP;
-		//push  ebp
-		//mov   ebp, esp
-		//ebp+4+4+20
-		int catchIndex;
-		asm volatile ("mov %0,[ebp+0x28];" : "=r" (catchIndex));
-		if (catchIndex > 0) {
-			return catchIndex;
+	__attribute__((noinline, stdcall)) void __throw_magic_link() {
+		int test;
+		asm volatile ("mov %0,1;" : "=r" (test));
+		if (test > 0) {
+			return;
 		}
-		/* ошибка, индекс 0 или -1 значит что, 
-		 * смотрим не в то место
-		 * или компилятор не gcc
-		 * или изменилась логика обработки исключений
-		 * или компилятор подавил throw
-		 * __throw_magic_link обязательно должен иметь вероятность throw
-		 */
-		printf("SEH: throw link error!\n");
 		throw SEH_EXCEPTION();
-		//mov   esp, ebp
-		//pop   ebp
-		//ret
 	}
-
-	__attribute__((noinline, stdcall)) volatile int __get_catch_index() {
-		NOP;
-		//push  ebp
-		//mov   ebp, esp
-		//ebp+4+4+20
-		int catchIndex;
-		asm volatile ("mov %0,[ebp+0x28];" : "=r" (catchIndex) :);
-		return catchIndex;
-		//mov   esp, ebp
-		//pop   ebp
-		//ret
-	}
-
-	__attribute__((noinline, stdcall)) volatile void __set_catch_index(int catchIndex) {
-		NOP;
-		//push  ebp
-		//mov   ebp, esp
-		//ebp+4+4+20
-		asm volatile ("mov [ebp+0x28],%0;" ::"r" (catchIndex) :);
-		//mov   esp, ebp
-		//pop   ebp
-		//ret
-	}
-
 
 }
 
@@ -208,12 +168,12 @@ namespace seh {
 						__seh_ex_reg.prev = (_EXCEPTION_REGISTRATION_RECORD*) __seh_prev_addr;\
 						__seh_ex_reg.handler = (PEXCEPTION_ROUTINE) & seh::except_handler;\
 						asm volatile("mov fs:[0], %0;"::"r"(&__seh_ex_reg) :);\
-						int catchIndex = seh::__get_catch_index();\
+						int catchIndex; asm volatile ("mov %0,[esp+0x20];" : "=r" (catchIndex) :);/*индекс catch блока*/\
 						seh::__throw_magic_link();\
 						/*begin try bloc*/
 
 #define __except_line(filter, line )\
-						seh::__set_catch_index(catchIndex);\
+						asm volatile ("mov [esp+0x20],%0;" ::"r" (catchIndex) :);;\
 						asm volatile("mov fs:[0], %0;"::"r"(__seh_ex_reg.prev) :);\
 					} catch (filter) {\
 						asm volatile("mov fs:[0], %0;"::"r"(__seh_ex_reg.prev) :);\
