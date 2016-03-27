@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
 				{
 					printf("try3_3!\n");
 				}
-				__exceptSEH
+				__except(SEH_EXCEPTION)
 				{
 					printf("except3_3!\n");
 				}
