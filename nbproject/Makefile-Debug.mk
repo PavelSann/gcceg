@@ -42,8 +42,8 @@ OBJECTFILES= \
 CFLAGS=-m32
 
 # CC Compiler Flags
-CCFLAGS=-m32 -m32 -Wl,--kill-at -masm=intel
-CXXFLAGS=-m32 -m32 -Wl,--kill-at -masm=intel
+CCFLAGS=-m32 -Wl,--kill-at -masm=intel
+CXXFLAGS=-m32 -Wl,--kill-at -masm=intel
 
 # Fortran Compiler Flags
 FFLAGS=

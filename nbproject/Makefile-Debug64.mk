@@ -14,16 +14,16 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=i686-w64-mingw32-gcc
+CC=x86_64-w64-mingw32-gcc
 CCC=x86_64-w64-mingw32-c++
 CXX=x86_64-w64-mingw32-c++
-FC=i686-w64-mingw32-gfortran
-AS=i686-w64-mingw32-as
+FC=x86_64-w64-mingw32-gfortran
+AS=x86_64-w64-mingw32-as
 
 # Macros
-CND_PLATFORM=CygwinMinGW32-Windows
+CND_PLATFORM=CygwinMinGW64-Windows
 CND_DLIB_EXT=dll
-CND_CONF=Release
+CND_CONF=Debug64
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -39,17 +39,17 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-m32
+CFLAGS=-m64
 
 # CC Compiler Flags
-CCFLAGS=-m32 -Wl,--kill-at -masm=intel -static
-CXXFLAGS=-m32 -Wl,--kill-at -masm=intel -static
+CCFLAGS=-m64 -Wl,--kill-at -masm=intel
+CXXFLAGS=-m64 -Wl,--kill-at -masm=intel
 
 # Fortran Compiler Flags
 FFLAGS=
 
 # Assembler Flags
-ASFLAGS=--32 -masm=intel
+ASFLAGS=--64
 
 # Link Libraries and Options
 LDLIBSOPTIONS=
@@ -60,12 +60,12 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gccseh.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	i686-w64-mingw32-c++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gccseh ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gccseh ${OBJECTFILES} ${LDLIBSOPTIONS} -v
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

@@ -46,7 +46,7 @@
         <ccTool>
           <architecture>1</architecture>
           <standard>11</standard>
-          <commandLine>-m32 -Wl,--kill-at -masm=intel</commandLine>
+          <commandLine>-Wl,--kill-at -masm=intel</commandLine>
         </ccTool>
         <asmTool>
           <developmentMode>0</developmentMode>
@@ -78,7 +78,8 @@
           <developmentMode>5</developmentMode>
           <architecture>1</architecture>
           <standard>11</standard>
-          <commandLine>-m32 -Wl,--kill-at -masm=intel -static</commandLine>
+          <commandlineTool>x86_64-w64-mingw32-c++</commandlineTool>
+          <commandLine>-Wl,--kill-at -masm=intel -static</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -88,10 +89,78 @@
           <architecture>1</architecture>
           <commandLine>-masm=intel</commandLine>
         </asmTool>
+        <linkerTool>
+          <commandlineTool>i686-w64-mingw32-c++</commandlineTool>
+        </linkerTool>
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="seh.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug64" type="1" platformSpecific="true">
+      <toolsSet>
+        <compilerSet>CygwinMinGW64|Cygwin</compilerSet>
+        <platform>3</platform>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <architecture>2</architecture>
+          <standard>10</standard>
+        </cTool>
+        <ccTool>
+          <architecture>2</architecture>
+          <standard>11</standard>
+          <commandLine>-Wl,--kill-at -masm=intel</commandLine>
+        </ccTool>
+        <asmTool>
+          <developmentMode>0</developmentMode>
+          <architecture>2</architecture>
+        </asmTool>
+        <linkerTool>
+          <commandLine>-v</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="seh.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release64" type="1" platformSpecific="true">
+      <toolsSet>
+        <compilerSet>CygwinMinGW64|Cygwin</compilerSet>
+        <platform>3</platform>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <standard>10</standard>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <standard>11</standard>
+          <commandLine>-Wl,--kill-at -masm=intel -static</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>0</developmentMode>
+          <architecture>2</architecture>
+          <commandLine>-masm=intel</commandLine>
+        </asmTool>
+      </compileType>
+      <item path="main.cpp" ex="false" tool="1" flavor2="11">
+      </item>
+      <item path="seh.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sehGCC.cc" ex="true" tool="1" flavor2="11">
       </item>
     </conf>
   </confs>
