@@ -1,12 +1,27 @@
 //asm(".intel_syntax noprefix");
 #ifndef SEH_H
 #define SEH_H
-#include <unwind.h>
-typedef void (__stdcall *PSEH_HANDLER) (PEXCEPTION_RECORD pException, PEXCEPTION_REGISTRATION pEstablisherFrame, PCONTEXT pContext, PEXCEPTION_REGISTRATION *pDispatcherContext);
-//typedef void (__stdcall*PLANDING_THROW)(const CONTEXT *pctx);
+//#include <unwind.h>
 
 #define INT3 asm("int3")
 #define NOP asm("nop")
+
+
+#ifndef _WIN32
+#error Only support _WIN32
+#endif
+
+#ifdef _x86_64_
+#error Not support x64
+#endif
+
+#ifndef __GNUC__
+#error Only support GCC
+#endif
+
+#ifndef __MINGW32__
+#error Only support gcc MINGW32
+#endif
 
 struct SEH_EXCEPTION {
 	PVOID address;
@@ -81,8 +96,6 @@ namespace seh {
 	}
 
 	void __stdcall landing_throw_unwinder(PVOID exceptionAddress, DWORD exceptionCode) {
-		//push  ebp
-		//mov   ebp, esp
 
 		//востанавливаем предыдущий обработчик seh
 		//		EXCEPTION_REGISTRATION * pSehExcReg;
@@ -94,9 +107,6 @@ namespace seh {
 		ex.address = exceptionAddress;
 		ex.code = exceptionCode;
 		throw ex;
-		//mov   esp, ebp
-		//pop   ebp
-		//ret
 	}
 
 	EXCEPTION_DISPOSITION __cdecl except_handler(
@@ -105,10 +115,9 @@ namespace seh {
 			PCONTEXT pContext,
 			PEXCEPTION_REGISTRATION *pDispatcherContext) {
 
-		print_except(pException);
-		//		print_ctx(pContext);
+		//print_except(pException);
+		//print_ctx(pContext);
 
-		//pException->ExceptionCode  //STATUS_
 		if (pException->ExceptionFlags & (EXCEPTION_UNWINDING | EXCEPTION_EXIT_UNWIND)) {
 			return ExceptionCollidedUnwind;
 		}
@@ -118,10 +127,6 @@ namespace seh {
 		}
 
 		DWORD pLanding = (DWORD) & landing_throw_unwinder;
-
-		//magic
-		//mov [esp+20],2
-		//		*(int *) (pContext->Esp + 0x20) = 2; //MAGIC
 
 		//имитация call
 		// push параметр DWORD exceptionCode
@@ -138,17 +143,17 @@ namespace seh {
 		return ExceptionContinueExecution;
 	}
 
-	//mov[esp+20],index
-	//call __throw_unwinder_link (push ip+; jmp __throw_unwinder_link)
-
 	/**
 	 * не даёт компилятору вырезать try{..}catch{...} из за отсутсвия методов бросающих исключение
 	 * вынуждает компилятор заполнить структуру для перехвата исключения и указать catchIndex
-	 * возвращает catchIndex
+	 * вызов метода будет выглядеть так
+	 * mov[esp+20],index
+	 * call __throw_magic_link
+	 *(push eip; jmp __throw_magic_link)
 	 */
 	__attribute__((noinline, stdcall)) void __throw_magic_link() {
 		int test;
-		asm volatile ("mov %0,1;" : "=r" (test));
+		asm volatile ("mov %0,1;" : "=r" (test)); //чтобы gcc не вырезал не используемый throw
 		if (test > 0) {
 			return;
 		}

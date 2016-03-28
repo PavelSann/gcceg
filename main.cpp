@@ -89,13 +89,7 @@ void test_2() {
 
 int main(int argc, char** argv) {
 	NOP;
-	NOP;
-	NOP;
-	//	catch_test();
-	//	SetUnhandledExceptionFilter(&ExceptionFilter);
-	//	cout << "SetUnhandledExceptionFilter" << endl;
-	//	cout << "recursive .";
-
+	
 	printf("\ntest1!\n");
 	__try{
 		throw_test();
@@ -104,18 +98,6 @@ int main(int argc, char** argv) {
 		printf("except1!\n");
 	}
 
-
-	//try2_1!
-	//EXCEPTION_RECORD(0028f8e4):
-	// Address=004019ec
-	// Code=c0000005
-	// Flags=0
-	//except2_1!
-	//EXCEPTION_RECORD(0028f8e4):
-	// Address=004019ec
-	// Code=c0000005
-	// Flags=0
-	//except2_0!
 
 	test_2();
 
